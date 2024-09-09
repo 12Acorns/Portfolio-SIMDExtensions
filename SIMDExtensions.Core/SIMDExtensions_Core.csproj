@@ -8,8 +8,4 @@
 	<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SIMDExtensions_Generator\SIMDExtensions_Generator.csproj" OutputItemType="Analyzer" />
-  </ItemGroup>
-
 </Project>

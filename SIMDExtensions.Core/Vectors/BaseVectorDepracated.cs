@@ -12,13 +12,13 @@ using System.Numerics;
 namespace SIMDExtensions_Core.Vectors;
 
 [StructLayout(LayoutKind.Sequential)]
-public readonly ref partial struct BaseVector<T> where T : INumber<T>
+public readonly ref partial struct BaseVectorDepracated<T> where T : INumber<T>
 {
 	#region Init static
 	private static readonly ArchitectureType targetPlatform;
 	private static readonly SIMDSupport targetBitWidth;
 
-	static BaseVector()
+	static BaseVectorDepracated()
 	{
 		targetPlatform = GetArchitectureType();
 		targetBitWidth = GetSIMDWidth();
@@ -97,58 +97,58 @@ public readonly ref partial struct BaseVector<T> where T : INumber<T>
 	}
 	#endregion
 
-	public static BaseVector<T> operator +(BaseVector<T> _lhs, BaseVector<T> _rhs)
+	public static BaseVectorDepracated<T> operator +(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs)
 	{
-		var _ret = default(BaseVector<T>);
+		var _ret = default(BaseVectorDepracated<T>);
 		Add(_lhs, _rhs, ref _ret);
 		return _ret;
 	}
-	public static BaseVector<T> operator -(BaseVector<T> _lhs, BaseVector<T> _rhs)
+	public static BaseVectorDepracated<T> operator -(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs)
 	{
-		var _ret = default(BaseVector<T>);
+		var _ret = default(BaseVectorDepracated<T>);
 		Subtract(_lhs, _rhs, ref _ret);
 		return _ret;
 	}
-	public static BaseVector<T> operator *(BaseVector<T> _lhs, BaseVector<T> _rhs)
+	public static BaseVectorDepracated<T> operator *(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs)
 	{
-		var _ret = default(BaseVector<T>);
+		var _ret = default(BaseVectorDepracated<T>);
 		Multiply(_lhs, _rhs, ref _ret);
 		return _ret;
 	}
-	public static BaseVector<T> operator /(BaseVector<T> _lhs, BaseVector<T> _rhs)
+	public static BaseVectorDepracated<T> operator /(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs)
 	{
-		var _ret = default(BaseVector<T>);
+		var _ret = default(BaseVectorDepracated<T>);
 		Divide(_lhs, _rhs, ref _ret);
 		return _ret;
 	}
 
-	static partial void Add(BaseVector<T> _lhs, BaseVector<T> _rhs, ref BaseVector<T> _ret);
-	static partial void Subtract(BaseVector<T> _lhs, BaseVector<T> _rhs, ref BaseVector<T> _ret);
-	static partial void Multiply(BaseVector<T> _lhs, BaseVector<T> _rhs, ref BaseVector<T> _ret);
-	static partial void Divide(BaseVector<T> _lhs, BaseVector<T> _rhs, ref BaseVector<T> _ret);
+	static partial void Add(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs, ref BaseVectorDepracated<T> _ret);
+	static partial void Subtract(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs, ref BaseVectorDepracated<T> _ret);
+	static partial void Multiply(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs, ref BaseVectorDepracated<T> _ret);
+	static partial void Divide(BaseVectorDepracated<T> _lhs, BaseVectorDepracated<T> _rhs, ref BaseVectorDepracated<T> _ret);
 }
 /// <summary>
 /// Allocating methods on the stack, provides a simple set of methods to perform arithmatic operations on generic type
-/// <see cref="BaseVector{T}"/>
+/// <see cref="BaseVectorDepracated{T}"/>
 /// </summary>
 internal static class BaseVector
 {
-	public static BaseVector<T> Add<T>(this BaseVector<T> _this, BaseVector<T> _other)
+	public static BaseVectorDepracated<T> Add<T>(this BaseVectorDepracated<T> _this, BaseVectorDepracated<T> _other)
 		where T : INumber<T>
 	{
 		return _this + _other;
 	}
-	public static BaseVector<T> Subtract<T>(this BaseVector<T> _this, BaseVector<T> _other)
+	public static BaseVectorDepracated<T> Subtract<T>(this BaseVectorDepracated<T> _this, BaseVectorDepracated<T> _other)
 		where T : INumber<T>
 	{
 		return _this - _other;
 	}
-	public static BaseVector<T> Multiply<T>(this BaseVector<T> _this, BaseVector<T> _other)
+	public static BaseVectorDepracated<T> Multiply<T>(this BaseVectorDepracated<T> _this, BaseVectorDepracated<T> _other)
 		where T : INumber<T>
 	{
 		return _this * _other;
 	}
-	public static BaseVector<T> Divide<T>(this BaseVector<T> _this, BaseVector<T> _other)
+	public static BaseVectorDepracated<T> Divide<T>(this BaseVectorDepracated<T> _this, BaseVectorDepracated<T> _other)
 		where T : INumber<T>
 	{
 		return _this / _other;

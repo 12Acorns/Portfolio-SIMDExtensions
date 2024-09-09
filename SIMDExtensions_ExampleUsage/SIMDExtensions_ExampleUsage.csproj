@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SIMDExtensions.Core\SIMDExtensions_Core.csproj" />
+        <ProjectReference Include="..\SIMDExtensions_Generator\SIMDExtensions_Generator.csproj"
+					  OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
 
 </Project>
