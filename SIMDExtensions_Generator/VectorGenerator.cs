@@ -1,4 +1,6 @@
-﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+﻿using SIMDExtensions_Generator.Generator.Types.Known;
+using SIMDExtensions_Generator.Generator.Types;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
@@ -6,8 +8,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System;
-using SIMDExtensions_Generator.Generator.Types;
-using SIMDExtensions_Generator.Generator.Types.Known;
 
 namespace SIMDExtensions_Generator;
 
@@ -36,11 +36,13 @@ internal partial class VectorGenerator : IIncrementalGenerator
 //		}
 //#endif
 
-		var _code = new BaseClassGenerator().Generate();
+		var _baseVectorCode = new BaseVectorGenerator().Generate();
+		var _vectorArrayCode = new VectorArrayGenerator().Generate();
 
 		_prodContext.AddSource("ArchitectureType.g.cs", new ArchitectureTypeGenerator().Generate());
 		_prodContext.AddSource("SIMDSupport.g.cs", new SIMDSupportGenerator().Generate());
-		_prodContext.AddSource("BaseVector.g.cs", _code);
+		_prodContext.AddSource("BaseVector.g.cs", _baseVectorCode);
+		_prodContext.AddSource("VectorArray.g.cs", _vectorArrayCode);
 	}
 
 	private static ObjectCreationExpressionSyntax? AnalyzeCreation(GeneratorSyntaxContext _context)

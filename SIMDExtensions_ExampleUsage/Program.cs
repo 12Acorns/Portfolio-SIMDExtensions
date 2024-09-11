@@ -1,33 +1,35 @@
 ﻿using SIMDExtensions.Core.Intrinsics;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 
 Console.WriteLine("Hello, World!");
 
-var _testVec =  new BaseVector<double>();
-var _testVec1 = new BaseVector<float>();
+var _testSequenceInt = Enumerable.Range(0, 1000).ToArray();
 
-var _vec2 = new BaseVector<int>();
-var _vec3 = new BaseVector<int>();
+var _vecc = new Vector<int>(_testSequenceInt);
+
+var _vec1 = new BaseVector<int>(_testSequenceInt);
+var _vec2 = new BaseVector<int>(_testSequenceInt);
 
 Console.WriteLine(GetVectorData<Half>());
 Console.WriteLine(GetVectorData<double>());
 Console.WriteLine(GetVectorData<float>());
+Console.WriteLine(GetVectorData<int>());
 
 //var _vec = _vec2 + _vec3;
 
 Console.ReadLine();
 
-static string GetVectorData<T>() where T : INumber<T>
+static string GetVectorData<T>() where T : struct, INumber<T>
 {
-	var _count = BaseVector<T>.Count;
 	var _supported = BaseVector<T>.IsSupported;
+
+	int? _count = _supported ? BaseVector<T>.Count : null;
 	var _type = ToUpperFirstChar(typeof(T).Name);
 
 	return
 $@"
 {_type}:
-    Count: {_count}
+    Count: {_count?.ToString() ?? "Not supported"}
     Supported: {_supported}";
 }
 static string ToUpperFirstChar(string _input)
