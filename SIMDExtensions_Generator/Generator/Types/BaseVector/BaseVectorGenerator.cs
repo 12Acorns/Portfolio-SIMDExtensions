@@ -1,10 +1,10 @@
-﻿using SIMDExtensions_Generator.Generator.Types.Known;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Text;
 using System;
+using SIMDExtensions_Generator.Generator.Types.Data;
 
-namespace SIMDExtensions_Generator.Generator.Types;
+namespace SIMDExtensions_Generator.Generator.Types.BaseVector;
 
 internal sealed partial class BaseVectorGenerator : IGeneratorProvider
 {
@@ -197,18 +197,32 @@ public readonly ref partial struct BaseVector<T> where T : struct, INumber<T>
 	#endregion
 	public BaseVectorGenerator()
 	{
-		Ctor = new CtorGenerator();
+		ctor = new CtorGenerator();
+		// TODO: Implement a enum to have concrete names
+		// Implement a mapper to get the method name for said enum member
+		// Implement a mapper to get the appropriate Vector{Width}<T>.{Method} type
+		var _methodMeta = new MethodMeta("Add", MethodType.Public | MethodType.Static, "BaseVector<T>",
+			"BaseVector<T>", "BaseVector<T>");
+		var _methodData = new MethodData(_methodMeta, new VectorOperationGenerator());
+		method = new MethodGenerator(_methodData);
 	}
 
 	public int WriteIndex { get; } = GetWriteIndex(BASECLASS, GetTotalLines(BASECLASS.AsSpan()), '\t');
 
-	private readonly CtorGenerator Ctor;
+	private readonly CtorGenerator ctor;
+	private readonly MethodGenerator method;
 
 	public string Generate()
 	{
-		return 
+		var _ctor = ctor.Generate();
+		var _ctorLength = _ctor.Length;
+
+		var _method = method.Generate();
+
+		return
 			new StringBuilder(BASECLASS)
-				.Insert(WriteIndex, Ctor.Generate())
+				.Insert(WriteIndex, _ctor)
+				.Insert(WriteIndex + _ctorLength, _method)
 			.ToString();
 	}
 

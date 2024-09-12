@@ -15,6 +15,8 @@ Console.WriteLine(GetVectorData<double>());
 Console.WriteLine(GetVectorData<float>());
 Console.WriteLine(GetVectorData<int>());
 
+var _vec3 = BaseVector<int>.Add(_vec1, _vec2);
+
 //var _vec = _vec2 + _vec3;
 
 Console.ReadLine();

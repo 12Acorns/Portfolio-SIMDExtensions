@@ -1,4 +1,4 @@
-﻿using SIMDExtensions_Generator.Generator.Types.Known;
+﻿using SIMDExtensions_Generator.Generator.Types.BaseVector;
 using SIMDExtensions_Generator.Generator.Types;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;

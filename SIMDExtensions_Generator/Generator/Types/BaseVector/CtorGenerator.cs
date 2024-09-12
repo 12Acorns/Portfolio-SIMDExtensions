@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SIMDExtensions_Generator.Generator.Types;
+namespace SIMDExtensions_Generator.Generator.Types.BaseVector;
 
 internal sealed partial class BaseVectorGenerator
 {
