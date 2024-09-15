@@ -1,8 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using SIMDExtensions_Generator.Generator.Types.Data.Method;
+using SIMDExtensions_Generator.Generator.Types.Data;
+using System.Runtime.CompilerServices;
+using System.Diagnostics.Contracts;
 using System.Collections.Generic;
 using System.Text;
 using System;
-using SIMDExtensions_Generator.Generator.Types.Data;
 
 namespace SIMDExtensions_Generator.Generator.Types.BaseVector;
 
@@ -198,37 +200,57 @@ public readonly ref partial struct BaseVector<T> where T : struct, INumber<T>
 	public BaseVectorGenerator()
 	{
 		ctor = new CtorGenerator();
-		// TODO: Implement a enum to have concrete names
-		// Implement a mapper to get the method name for said enum member
-		// Implement a mapper to get the appropriate Vector{Width}<T>.{Method} type
-		var _methodMeta = new MethodMeta("Add", MethodType.Public | MethodType.Static, "BaseVector<T>",
-			"BaseVector<T>", "BaseVector<T>");
-		var _methodData = new MethodData(_methodMeta, new VectorOperationGenerator());
-		method = new MethodGenerator(_methodData);
+		methods = GeneratePublicAPIMethods();
+	}
+
+	private MethodGenerator[] GeneratePublicAPIMethods()
+	{
+		var _baseVectorReturn = new Arg("BaseVector<T>", false);
+		var _baseVectorArg = new Arg("BaseVector<T>");
+		var _methodsLength = Enum.GetNames(typeof(VectorMethod)).Length;
+		var _methods = new MethodGenerator[_methodsLength];
+		for(int i = 0; i < _methodsLength; i++)
+		{
+			var _enumMember = (VectorMethod)i;
+			// Implement a mapper to get the appropriate Vector{Width}<T>.{Method} type
+			_ = VectorMethodMapper.TryGetMethodName(_enumMember, out string _methodName);
+			var _methodMeta = new MethodMeta(_methodName, MethodType.Public | MethodType.Static, _baseVectorReturn,
+				_baseVectorArg, _baseVectorArg);
+			var _methodData = new MethodData(_methodMeta, new VectorOperationGenerator(_enumMember));
+
+			_methods[i] = new MethodGenerator(_methodData);
+		}
+		return _methods;
 	}
 
 	public int WriteIndex { get; } = GetWriteIndex(BASECLASS, GetTotalLines(BASECLASS.AsSpan()), '\t');
 
 	private readonly CtorGenerator ctor;
-	private readonly MethodGenerator method;
+	private readonly MethodGenerator[] methods;
 
 	public string Generate()
 	{
 		var _ctor = ctor.Generate();
 		var _ctorLength = _ctor.Length;
 
-		var _method = method.Generate();
+		var _builder = new StringBuilder();
+		foreach(var _method in methods)
+		{
+			_builder.AppendLine(_method.Generate());
+		}
 
 		return
 			new StringBuilder(BASECLASS)
 				.Insert(WriteIndex, _ctor)
-				.Insert(WriteIndex + _ctorLength, _method)
+				.Insert(WriteIndex + _ctorLength, _builder.ToString())
 			.ToString();
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static int GetWriteIndex(string _input, int _line, char _targetEndChar)
 	{
+		Contract.Assert(!string.IsNullOrEmpty(_input), "Input is null or empty");
+
 		var _returnIndex = 0;
 		foreach(var _lineInfo in GetLines(_input))
 		{

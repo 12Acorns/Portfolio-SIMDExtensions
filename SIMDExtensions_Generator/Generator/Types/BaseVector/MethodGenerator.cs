@@ -1,7 +1,8 @@
-﻿using SIMDExtensions_Generator.Generator.Types.Data;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System;
+using SIMDExtensions_Generator.Generator.Types.Data.Method;
+using System.Linq;
 
 namespace SIMDExtensions_Generator.Generator.Types.BaseVector;
 
@@ -61,8 +62,8 @@ internal sealed partial class BaseVectorGenerator
 			_ = IsMethodStatic(_type, out string _static);
 
 			return string.Format(_METHODTEMPLATE,
-				_accessTypeName, _static, method.Meta.ReturnType,
-				method.Meta.Name, MethodMeta.ArgsToMethodParams(method.Meta.Args),
+				_accessTypeName, _static, method.Meta.ReturnType.TypeName,
+				method.Meta.Name, method.Meta.ArgsToMethodParams(),
 				method.Code.Generate());
 		}
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
